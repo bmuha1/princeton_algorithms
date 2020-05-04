@@ -2,7 +2,7 @@
 # Implement weighted quick union with path compression
 
 
-class WeightedQuickUnionPathCompression():
+class WeightedQuickUnionPathComp():
     def __init__(self, size):
         # Initialize list
         # O(n)
@@ -38,10 +38,9 @@ class WeightedQuickUnionPathCompression():
         else:
             self.id[j] = i
             self.size[i] += self.size[j]
-        print(self.size)
 
 if __name__ == '__main__':
-    qf = WeightedQuickUnionPathCompression(10)
+    qf = WeightedQuickUnionPathComp(10)
     print(qf)
     qf.union(4, 3)
     print(qf)
