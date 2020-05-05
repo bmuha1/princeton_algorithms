@@ -7,7 +7,11 @@ class Percolation:
     # Model a percolation system
     def __init__(self, n):
         # Create n-by-n grid, with all sites initially blocked
+        if n <= 0:
+            raise Exception('N should be larger than 0')
         self.grid = [[1 for i in range(n)] for j in range(n)]
+        self.size = n
+        self.u = WeightedQuickUnionPathComp(n ** 2)
 
     def __str__(self):
         # Print the grid
@@ -19,27 +23,37 @@ class Percolation:
                 else:
                     grid += ' '
             grid += '\n'
-        return grid
+        return grid[:-1]
 
     def open(self, row, col):
         # Open the site if it's not already open
         if row < 1 or col < 1 or row > len(self.grid) or col > len(self.grid):
-            print('Coordinate is outside the grid range')
-        else:
-            if self.grid[row - 1][col - 1]:
-                self.grid[row - 1][col - 1] = 0
+            raise Exception('Coordinate is outside the grid range')
+        row -= 1
+        col -= 1
+        if self.grid[row][col]:
+            self.grid[row][col] = 0
+            if col + 1 < self.size and self.grid[row][col + 1] == 0:
+                self.u.union(row * self.size + col, row * self.size + col + 1)
+            if col - 1 >= 0 and self.grid[row][col - 1] == 0:
+                self.u.union(row * self.size + col, row * self.size + col - 1)
+            if row + 1 < self.size and self.grid[row + 1][col] == 0:
+                self.u.union(row * self.size + col,
+                             (row + 1) * self.size + col)
+            if row - 1 >= 0 and self.grid[row - 1][col] == 0:
+                self.u.union(row * self.size + col,
+                             (row - 1) * self.size + col)
 
     def is_open(self, row, col):
         # Check if the site is open
         if row < 1 or col < 1 or row > len(self.grid) or col > len(self.grid):
-            return 'Coordinate is outside the grid range'
-        else:
-            return self.grid[row - 1][col - 1] == 0
+            raise Exception('Coordinate is outside the grid range')
+        return self.grid[row - 1][col - 1] == 0
 
     def is_full(self, row, col):
         # Check if the site is full
         if row < 1 or col < 1 or row > len(self.grid) or col > len(self.grid):
-            return 'Coordinate is outside the grid range'
+            raise Exception('Coordinate is outside the grid range')
         else:
             return self.grid[row - 1][col - 1] == 1
 
@@ -54,30 +68,15 @@ class Percolation:
 
     def percolates(self):
         # Check if the system percolates
-        size = len(self.grid)
-        u = WeightedQuickUnionPathComp(size ** 2)
-
-        for row in range(size):
-            for col in range(size):
-                # print(row, col, row * size + col)
-                if self.grid[row][col] == 0:
-                    if col + 1 < size and self.grid[row][col + 1] == 0:
-                        u.union(row * size + col, row * size + col + 1)
-                    if col - 1 >= 0 and self.grid[row][col - 1] == 0:
-                        u.union(row * size + col, row * size + col - 1)
-                    if row + 1 < size and self.grid[row + 1][col] == 0:
-                        u.union(row * size + col, (row + 1) * size + col)
-                    if row - 1 >= 0 and self.grid[row - 1][col] == 0:
-                        u.union(row * size + col, (row - 1) * size + col)
-
-        for i in range(size * (size - 1), size * size):
-            if u.root(i) < size:
+        for i in range(self.size * (self.size - 1), self.size ** 2):
+            if self.u.root(i) < self.size:
                 return True
         return False
 
 if __name__ == '__main__':
     p = Percolation(5)
     print(p)
+    print('-----')
     p.open(2, 2)
     p.open(1, 2)
     p.open(2, 1)
@@ -89,4 +88,6 @@ if __name__ == '__main__':
     p.open(5, 4)
 
     print(p)
+    print('-----')
+    print(p.number_open_sites())
     print(p.percolates())
