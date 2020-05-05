@@ -11,7 +11,10 @@ class Percolation:
             raise Exception('N should be larger than 0')
         self.grid = [[1 for i in range(n)] for j in range(n)]
         self.size = n
-        self.u = WeightedQuickUnionPathComp(n ** 2)
+        self.u = WeightedQuickUnionPathComp(n ** 2 + 2)
+        for i in range(n):
+            self.u.union(n ** 2, i)
+            self.u.union(n ** 2 + 1, n * (n - 1) + i)
 
     def __str__(self):
         # Print the grid
@@ -68,26 +71,55 @@ class Percolation:
 
     def percolates(self):
         # Check if the system percolates
-        for i in range(self.size * (self.size - 1), self.size ** 2):
-            if self.u.root(i) < self.size:
-                return True
-        return False
+        return self.u.root(self.size ** 2) == self.u.root(self.size ** 2 + 1)
 
 if __name__ == '__main__':
     p = Percolation(5)
     print(p)
-    print('-----')
-    p.open(2, 2)
-    p.open(1, 2)
-    p.open(2, 1)
-    p.open(3, 1)
-    p.open(4, 1)
-    p.open(4, 2)
-    p.open(4, 3)
-    p.open(4, 4)
-    p.open(5, 4)
-
-    print(p)
-    print('-----')
-    print(p.number_open_sites())
     print(p.percolates())
+    print('-----')
+
+    p.open(2, 2)
+    print(p)
+    print(p.percolates())
+    print('-----')
+
+    p.open(1, 2)
+    print(p)
+    print(p.percolates())
+    print('-----')
+
+    p.open(3, 1)
+    print(p)
+    print(p.percolates())
+    print('-----')
+
+    p.open(4, 1)
+    print(p)
+    print(p.percolates())
+    print('-----')
+
+    p.open(4, 2)
+    print(p)
+    print(p.percolates())
+    print('-----')
+
+    p.open(4, 3)
+    print(p)
+    print(p.percolates())
+    print('-----')
+
+    p.open(4, 4)
+    print(p)
+    print(p.percolates())
+    print('-----')
+
+    p.open(5, 4)
+    print(p)
+    print(p.percolates())
+    print('-----')
+
+    p.open(2, 1)
+    print(p)
+    print(p.percolates())
+    print('-----')
