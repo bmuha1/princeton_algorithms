@@ -42,6 +42,7 @@ class LinkedStackOfStrings:
         # Check if linked stack is empty
         return self.head is None
 
+
 if __name__ == '__main__':
     l = LinkedStackOfStrings()
     l.push('to')

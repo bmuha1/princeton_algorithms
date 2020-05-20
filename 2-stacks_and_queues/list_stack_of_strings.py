@@ -31,6 +31,7 @@ class ListStackOfStrings:
         # Check if linked stack is empty
         return len(self.list) == 0
 
+
 if __name__ == '__main__':
     l = ListStackOfStrings()
     l.push('to')
