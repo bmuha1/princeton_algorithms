@@ -53,7 +53,7 @@ class Deque:
 if __name__ == '__main__':
     l = Deque()
     print(l, l.size(), l.is_empty())
-    l.add_last('bat')
+    l.add_last('dog')
     print(l, l.size(), l.is_empty())
     l.add_first('cat')
     print(l, l.size(), l.is_empty())
