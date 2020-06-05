@@ -29,6 +29,16 @@ class Point():
         return (that.y - self.y) / (that.x - self.x)
 
 
+class LineSegment:
+    # Define a line segment between two points
+    def __init__(self, p, q):
+        self.p = p
+        self.q = q
+
+    def __str__(self):
+        return str(self.p) + ' -> ' + str(self.q)
+
+
 def merge_sort(a):
     # Implement merge sort
     if len(a) < 2:
@@ -68,4 +78,9 @@ if __name__ == '__main__':
     b = Point(1, 2)
     c = Point(3, 4)
     d = Point(5, 6)
+
+    p = LineSegment(a, b)
+    q = LineSegment(c, d)
     print(a, b, c, d)
+    print(p)
+    print(q)
