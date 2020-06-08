@@ -15,6 +15,26 @@ class Point():
         # Return a string
         return '(' + str(self.x) + ', ' + str(self.y) + ')'
 
+    def __eq__(self, that):
+        # Check if two points are equal
+        return self.y == that.y and self.x == that.x
+
+    def __ne__(self, that):
+        # Check if two points are not equal
+        return self.y != that.y or self.x != that.x
+
+    def __lt__(self, that):
+        # Check if self is less than that
+        if self.y == that.y:
+            return self.x - that.x < 0
+        return self.y - that.y < 0
+
+    def __gt__(self, that):
+        # Check if self is greater than that
+        if self.y == that.y:
+            return self.x - that.x > 0
+        return self.y - that.y > 0
+
     def compare(self, that):
         # Compare two points by y-coordinates,
         # breaking ties by x-coordinates
@@ -26,17 +46,48 @@ class Point():
 
     def slope(self, that):
         # Return the slope between two points
+        if self == that:
+            return float('-inf')
+        elif that.x - self.x == 0:
+            return float('inf')
         return (that.y - self.y) / (that.x - self.x)
 
 
 class LineSegment:
     # Define a line segment between two points
     def __init__(self, p, q):
+        # Initialize a line segment
         self.p = p
         self.q = q
 
     def __str__(self):
+        # Return a string
         return str(self.p) + ' -> ' + str(self.q)
+
+
+class BruteCollinearPoints:
+    # Examine 4 points at a time and check whether they all lie
+    # on the same line segment
+    def __init__(self, points):
+        # Find all line segments containing 4 points
+        self.segments = []
+        for i in range(0, len(points), 4):
+            if (points[i].slope(points[i + 1]) ==
+                points[i].slope(points[i + 2]) ==
+                    points[i].slope(points[i + 3])):
+                minimum = min(points[i], points[i + 1],
+                              points[i + 2], points[i + 3])
+                maximum = max(points[i], points[i + 1],
+                              points[i + 2], points[i + 3])
+                line = LineSegment(minimum, maximum)
+                self.segments.append(line)
+
+    def __str__(self):
+        # Return a string
+        s = ''
+        for segment in self.segments:
+            s += str(segment) + '\n'
+        return s
 
 
 def merge_sort(a):
@@ -69,18 +120,20 @@ def merge_sort(a):
 
 
 if __name__ == '__main__':
+    a = Point(10000, 0)
+    b = Point(0, 10000)
+    c = Point(3000, 7000)
+    d = Point(7000, 3000)
+    e = Point(20000, 21000)
+    f = Point(3000, 4000)
+    g = Point(14000, 15000)
+    h = Point(6000, 7000)
+
+    points = [a, b, c, d, e, f, g, h]
+    brute = BruteCollinearPoints(points)
+    print(brute)
+
     '''
-    a = [(19000, 10000), (18000, 10000), (32000, 10000),
+    p = [(19000, 10000), (18000, 10000), (32000, 10000),
          (21000, 10000), (1234, 5678), (14000, 10000)]
     '''
-
-    a = Point(0, 0)
-    b = Point(1, 2)
-    c = Point(3, 4)
-    d = Point(5, 6)
-
-    p = LineSegment(a, b)
-    q = LineSegment(c, d)
-    print(a, b, c, d)
-    print(p)
-    print(q)
