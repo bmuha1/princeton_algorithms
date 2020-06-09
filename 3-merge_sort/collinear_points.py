@@ -29,11 +29,19 @@ class Point():
             return self.x - that.x < 0
         return self.y - that.y < 0
 
+    def __le__(self, that):
+        # Check if self is less than or equal to that
+        return self.__eq__(that) or self.__lt__(that)
+
     def __gt__(self, that):
         # Check if self is greater than that
         if self.y == that.y:
             return self.x - that.x > 0
         return self.y - that.y > 0
+
+    def __ge__(self, that):
+        # Check if self is greater than or equal to that
+        return self.__eq__(that) or self.__gt__(that)
 
     def compare(self, that):
         # Compare two points by y-coordinates,
@@ -70,6 +78,8 @@ class BruteCollinearPoints:
     # on the same line segment
     def __init__(self, points):
         # Find all line segments containing 4 points
+        if not points:
+            raise Exception('No points provided')
         self.segments = []
         for i in range(0, len(points), 4):
             if (points[i].slope(points[i + 1]) ==
@@ -81,6 +91,40 @@ class BruteCollinearPoints:
                               points[i + 2], points[i + 3])
                 line = LineSegment(minimum, maximum)
                 self.segments.append(line)
+
+    def __str__(self):
+        # Return a string
+        s = ''
+        for segment in self.segments:
+            s += str(segment) + '\n'
+        return s
+
+
+class FastCollinearPoints:
+    # Sort points according to the slope they make
+    def __init__(self, points):
+        # Find all line segments containing 4 or more points
+        if not points:
+            raise Exception('No points provided')
+        self.segments = []
+        for p in range(len(points)):
+            self.p = points[p]
+            self.slopes = []
+            for i in range(len(points)):
+                if p != i:
+                    self.slopes.append(self.p.slope(points[i]))
+                else:
+                    self.slopes.append(float('-inf'))
+            merge_sort(self.slopes)
+            for i in range(2, len(self.slopes)):
+                if self.slopes[i] == self.slopes[i - 2]:
+                    # Bad logic here, indexes don't line up correctly
+                    minimum = min(self.p, points[i],
+                                  points[i - 1], points[i - 2])
+                    maximum = max(self.p, points[i],
+                                  points[i - 1], points[i - 2])
+                    line = LineSegment(minimum, maximum)
+                    self.segments.append(line)
 
     def __str__(self):
         # Return a string
@@ -116,7 +160,6 @@ def merge_sort(a):
         a[k] = right[j]
         j += 1
         k += 1
-    print(a)
 
 
 if __name__ == '__main__':
@@ -133,7 +176,15 @@ if __name__ == '__main__':
     brute = BruteCollinearPoints(points)
     print(brute)
 
-    '''
-    p = [(19000, 10000), (18000, 10000), (32000, 10000),
-         (21000, 10000), (1234, 5678), (14000, 10000)]
-    '''
+    fast = FastCollinearPoints(points)
+    print(fast)
+
+    a = Point(19000, 10000)
+    b = Point(18000, 10000)
+    c = Point(32000, 10000)
+    d = Point(21000, 10000)
+    e = Point(1234, 5678)
+    f = Point(14000, 10000)
+    points = [a, b, c, d, e, f]
+    fast = FastCollinearPoints(points)
+    print(fast)
