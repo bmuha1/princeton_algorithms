@@ -29,7 +29,21 @@ class Board:
         # Return the board dimension n
         return self.size
 
+    def hamming(self):
+        # Return the number of tiles out of place
+        tiles, current = 0, 1
+        for y in range(self.size):
+            for x in range(self.size):
+                if self.tiles[y][x] != current and current < self.size ** 2:
+                    tiles += 1
+                current += 1
+        return tiles
+
 
 if __name__ == '__main__':
     board = Board(3, [0, 1, 3, 4, 2, 5, 7, 8, 6])
+    board2 = Board(3, [8, 1, 3, 4, 0, 2, 7, 6, 5])
     print(board)
+    print('hamming:', board.hamming())
+    print(board2)
+    print('hamming:', board2.hamming())
