@@ -16,13 +16,18 @@ class Board:
                 y, x = y + 1, 0
 
     def __str__(self):
-        # Print max heap
+        # Print the board size n, followed by the grid
+        # 0 designates the blank square
         s = str(self.size) + '\n'
         for y in range(self.size):
             for x in range(self.size):
                 s += ' ' + str(self.tiles[y][x])
             s += '\n'
         return s
+
+    def dimension(self):
+        # Return the board dimension n
+        return self.size
 
 
 if __name__ == '__main__':
