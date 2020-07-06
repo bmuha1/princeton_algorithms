@@ -25,6 +25,11 @@ class Board:
             s += '\n'
         return s
 
+    def __eq__(self, other):
+        # Two boards are equal if they have the same size and their
+        # corresponding tiles are in the same positions
+        return self.size == other.size and self.tiles == other.tiles
+
     def dimension(self):
         # Return the board dimension n
         return self.size
@@ -62,9 +67,13 @@ class Board:
 if __name__ == '__main__':
     board = Board(3, [0, 1, 3, 4, 2, 5, 7, 8, 6])
     board2 = Board(3, [8, 1, 3, 4, 0, 2, 7, 6, 5])
+    board3 = Board(3, [8, 1, 3, 4, 0, 2, 7, 6, 5])
+
     print(board)
     print('hamming:', board.hamming())
     print('manhattan:', board.manhattan())
     print(board2)
     print('hamming:', board2.hamming())
     print('manhattan:', board2.manhattan())
+    print('equal:', board == board2)
+    print('equal:', board2 == board3)
