@@ -5,16 +5,19 @@ from copy import deepcopy
 
 class Board:
     # 8-puzzle board
-    def __init__(self, n, tiles):
+    def __init__(self, n, tiles, matrix=False):
         # Initialize board
-        self.tiles = [[0] * n for _ in range(n)]
         self.size = n
-        y = x = 0
-        for i in tiles:
-            self.tiles[y][x] = i
-            x += 1
-            if x == n:
-                y, x = y + 1, 0
+        if matrix:
+            self.tiles = tiles
+        else:
+            self.tiles = [[0] * n for _ in range(n)]
+            y = x = 0
+            for i in tiles:
+                self.tiles[y][x] = i
+                x += 1
+                if x == n:
+                    y, x = y + 1, 0
 
     def __str__(self):
         # Print the board size n, followed by the grid
@@ -74,36 +77,46 @@ class Board:
         if y0 > 0:
             temp = deepcopy(self.tiles)
             temp[y0][x0], temp[y0 - 1][x0] = temp[y0 - 1][x0], temp[y0][x0]
-            neighbors.append(temp)
+            neighbor = Board(self.size, temp, True)
+            neighbors.append(neighbor)
         if x0 > 0:
             temp = deepcopy(self.tiles)
             temp[y0][x0], temp[y0][x0 - 1] = temp[y0][x0 - 1], temp[y0][x0]
-            neighbors.append(temp)
+            neighbor = Board(self.size, temp, True)
+            neighbors.append(neighbor)
         if y0 < self.size - 1:
             temp = deepcopy(self.tiles)
             temp[y0][x0], temp[y0 + 1][x0] = temp[y0 + 1][x0], temp[y0][x0]
-            neighbors.append(temp)
+            neighbor = Board(self.size, temp, True)
+            neighbors.append(neighbor)
         if x0 < self.size - 1:
             temp = deepcopy(self.tiles)
             temp[y0][x0], temp[y0][x0 + 1] = temp[y0][x0 + 1], temp[y0][x0]
-            neighbors.append(temp)
+            neighbor = Board(self.size, temp, True)
+            neighbors.append(neighbor)
         return neighbors
 
 
 if __name__ == '__main__':
     board = Board(3, [0, 1, 3, 4, 2, 5, 7, 8, 6])
     board2 = Board(3, [8, 1, 3, 4, 0, 2, 7, 6, 5])
-    board3 = Board(3, [8, 1, 3, 4, 0, 2, 7, 6, 5])
 
+    print('board 1:')
     print(board)
     print('hamming:', board.hamming())
     print('manhattan:', board.manhattan())
+
+    print('neighbors:')
+    neighbors = board.neighbors()
+    for n in neighbors:
+        print(n)
+
+    print('board 2:')
     print(board2)
     print('hamming:', board2.hamming())
     print('manhattan:', board2.manhattan())
 
-    print('equal:', board == board2)
-    print('equal:', board2 == board3)
-
-    print(board.neighbors())
-    print(board2.neighbors())
+    print('neighbors:')
+    neighbors = board2.neighbors()
+    for n in neighbors:
+        print(n)
