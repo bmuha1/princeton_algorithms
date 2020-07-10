@@ -3,6 +3,16 @@
 from copy import deepcopy
 
 
+class SearchNode:
+    # Contains a board, the number of moves made to reach the board,
+    # and the previous search node
+    def __init__(self, board, moves=0, prev=None):
+        # Initialize search node
+        self.board = board
+        self.moves = moves
+        self.prev = prev
+
+
 class Board:
     # 8-puzzle board
     def __init__(self, n, tiles, matrix=False):
