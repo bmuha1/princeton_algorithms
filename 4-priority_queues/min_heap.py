@@ -12,7 +12,6 @@ class MinHeap:
 
     def swim(self, k):
         # Move node up to maintain binary heap property
-        # while k > 1 and self.heap[k // 2] < self.heap[k]:
         while k > 1 and self.heap[k // 2] > self.heap[k]:
             self.heap[k], self.heap[k // 2] = self.heap[k // 2], self.heap[k]
             k //= 2
@@ -21,10 +20,8 @@ class MinHeap:
         # Move node down to maintain binary heap property
         while k * 2 <= self.n:
             j = 2 * k
-            # if j < self.n and self.heap[j] < self.heap[j + 1]:
             if j < self.n and self.heap[j] > self.heap[j + 1]:
                 j += 1
-            # if self.heap[k] >= self.heap[j]:
             if self.heap[k] <= self.heap[j]:
                 break
             self.heap[k], self.heap[j] = self.heap[j], self.heap[k]
@@ -49,7 +46,7 @@ class MinHeap:
             return min
 
     def __str__(self):
-        # Print max heap
+        # Print min heap
         return str(self.heap[1:])
 
 
